@@ -173,7 +173,7 @@ void WindowWorld::display(const strategy::WorldInfo& worldInfo)
 	 *   oo  oo
 	 *   oo  oo
 	 */
-
+	int player = 0;
 	// Cursol position of Hex croodinate
 	auto cursolHexPos = console::Vec2(
 			getHexGridWidth() / 2 - 1,
@@ -217,6 +217,10 @@ void WindowWorld::display(const strategy::WorldInfo& worldInfo)
 			ulong index = worldY * worldInfo.getWorld()->getWidth() + worldX;
 			auto terrain = worldInfo.getWorld()->terrains[worldY * worldInfo.getWorld()->getWidth() + worldX];
 
+			auto visibleTerrains = worldInfo.getPlayerInfos().at(player)->getVisibleTerrains();
+			auto iteVT = std::find(visibleTerrains.begin(), visibleTerrains.end(), index);
+			auto isVisibleTerrain = iteVT == visibleTerrains.end() ? false : true;
+
 			// 0 1
 			// 2 3
 
@@ -226,15 +230,15 @@ void WindowWorld::display(const strategy::WorldInfo& worldInfo)
 					/* 0 */
 
 					auto units = worldInfo.getUnits();
-					auto iteTargetUnit = units.begin();
+					auto iteTargetUnit = units->begin();
 
-					for (; iteTargetUnit != units.end(); iteTargetUnit++) {
+					for (; iteTargetUnit != units->end(); iteTargetUnit++) {
 						if ((*iteTargetUnit)->getPos() == index)
 							break;
 					}
 
 
-					if (iteTargetUnit == units.end()) {
+					if (iteTargetUnit == units->end()) {
 						this->addCh(Window::CH_BLANK);
 					}
 					else {
@@ -251,7 +255,10 @@ void WindowWorld::display(const strategy::WorldInfo& worldInfo)
 				{
 					/* 2 */
 
-					this->addCh(makeChTerrain(terrain) | makeColorTerrain(terrain));
+					if (isVisibleTerrain) 
+						this->addCh(makeChTerrain(terrain) | makeColorTerrain(terrain));
+					else
+						this->addCh(makeChTerrain(terrain) | makeColorTerrainOutOfSight());
 
 					/* 3 */ 
 

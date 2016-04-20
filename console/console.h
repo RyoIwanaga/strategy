@@ -14,7 +14,8 @@ NS_USING_STRATEGY;
 #include <ncurses.h>
 
 enum class Color : short {
-	TerrainOcean = 1,
+	TerrainOutOfSight = 1,
+	TerrainOcean,
 	TerrainGlassland,
 	Player1 = 10,
 	Player2,
@@ -28,6 +29,7 @@ enum class Color : short {
 
 void initColorTerrain()
 {
+	init_pair(static_cast<short>(Color::TerrainOutOfSight), COLOR_WHITE, COLOR_BLACK);
 	init_pair(static_cast<short>(Color::TerrainOcean), COLOR_BLUE, COLOR_BLACK);
 	init_pair(static_cast<short>(Color::TerrainGlassland), COLOR_GREEN, COLOR_BLACK);
 }
@@ -47,6 +49,11 @@ short _makeColorTerrain(const Terrain& t)
 chtype makeColorTerrain(const Terrain& t)
 {
 	return COLOR_PAIR(_makeColorTerrain(t));
+}
+
+chtype makeColorTerrainOutOfSight()
+{
+	return COLOR_PAIR(static_cast<short>(Color::TerrainOutOfSight));
 }
 
 chtype makeColorPlayer(ushort player)

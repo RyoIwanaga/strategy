@@ -1,6 +1,11 @@
 #ifndef _reu_h_
 #define _reu_h_
 
+/***** Macros *****/
+
+#define REU__TYPEDEF_SPTR(type)				\
+public: typedef std::shared_ptr<type> Ptr
+
 
 #define REU__PROPERTY(type, var, fnName)							\
 private:	type var;												\
@@ -14,7 +19,9 @@ public:		virtual type get##fnName() const { return var; }
 #define REU__PROPERTY_PRIVATE(type, var, fnName)			\
 private:	type var;										\
 private:	type get##fnName() const { return var; }		\
-private:	void set##fnName(type var) { this->var = var; } 
+private:	void set##fnName(type var) { this->var = var; }
+/******/
+
 
 typedef short			sshort;
 typedef unsigned short	ushort;
@@ -27,6 +34,7 @@ typedef unsigned long 	ulong;
 #include <algorithm>
 #include <list>
 #include <functional>
+
 
 #define NS_REU 		namespace reu {
 #define NS_REU_END 	}

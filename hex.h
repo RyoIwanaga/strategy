@@ -7,15 +7,16 @@ NS_STRATEGY;
 
 namespace hex {
 
+	bool collectRange(std::set<PosHex>* acc, PosHex index, ushort range, int height, int width, bool isCyinder);
 	std::shared_ptr<std::set<PosHex>> 
-	range(PosHex index, ushort n, int height, int width, bool isCyinder);
+	createRange(PosHex index, ushort n, int height, int width, bool isCyinder);
 	std::list<PosHex> neighbors(PosHex index, int height, int width, bool isCyinder);
 
 
 
-	bool _range(std::set<PosHex>* acc, PosHex index, ushort n, int height, int width, bool isCyinder)
+	bool collectRange(std::set<PosHex>* acc, PosHex index, ushort range, int height, int width, bool isCyinder)
 	{
-		if (n == 0) {
+		if (range == 0) {
 			return true;
 		}
 		else {
@@ -23,14 +24,12 @@ namespace hex {
 
 			for (auto neighbor : neighbors) {
 				// XXX Destructive operation
-				auto resultInsert = acc->insert(neighbor);
+				auto isInserted = acc->insert(neighbor);
 
-				// already inserted
-				if (false) {
-					continue;
-				}
+				// TODO
+				//if (isInserted) continue;
 
-				auto resultCollect = hex::_range(acc, neighbor, (ushort)(n - 1), height, width, isCyinder);
+				auto resultCollect = hex::collectRange(acc, neighbor, (ushort)(range - 1), height, width, isCyinder);
 
 				if (! resultCollect) {
 					return false;
@@ -42,10 +41,10 @@ namespace hex {
 	}
 
 	std::shared_ptr<std::set<PosHex>> 
-	range(PosHex index, ushort n, int height, int width, bool isCyinder)
+	createRange(PosHex index, ushort n, int height, int width, bool isCyinder)
 	{
 		auto acc = std::make_shared<std::set<PosHex>>();
-		auto result = _range(acc.get(), index, n, height, width, isCyinder);
+		auto result = collectRange(acc.get(), index, n, height, width, isCyinder);
 
 		if (result) {
 			return acc;

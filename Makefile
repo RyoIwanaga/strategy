@@ -12,7 +12,7 @@ CFLAGS=-Wall -O
 CPP11=-std=c++11
 CURSES=-lncurses
 
-OBJS=World.cpp  main.cpp Unit.cpp
+OBJS=main.cpp Unit.cpp
 CLANGXX=clang++
 
 ### Target ###

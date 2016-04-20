@@ -23,12 +23,13 @@ public:
 	REU__PROPERTY(int, damage, Damaege);
 	REU__PROPERTY(ushort, move, Move);
 	REU__PROPERTY(ushort, moveMax, MoveMax);
+	REU__PROPERTY(ushort, sight, Sight);
 
 public:
 	typedef std::shared_ptr<Unit> Ptr;
 	static Ptr create(Type t, Owner owner, ulong pos);
 
-	Unit(Type t, Owner owner, PosHex pos, int hp, int damage, ushort move);
+	Unit(Type t, Owner owner, PosHex pos, int hp, int damage, ushort move, ushort sight);
 	virtual ~Unit();
 
 	bool isMovable();

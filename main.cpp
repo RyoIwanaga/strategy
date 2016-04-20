@@ -1,4 +1,5 @@
 #include "strategy.h"
+#include "hex.h"
 #include "WorldInfo.h"
 #include "console/console.h"
 
@@ -19,8 +20,7 @@
 // 3 sukumi
 //
 //// TODO
-// tikei iro
-// sikai
+// property macros
 // help popup
 // unit idou
 // unit / town info
@@ -45,11 +45,11 @@ int main ()
 
 	/*** create units ***/
 
-	std::list<Unit::Ptr> units;
-	units.push_back(Unit::create(Unit::Type::Settler, 0, 0));
-	units.push_back(Unit::create(Unit::Type::Warrior, 1, 1));
-	units.push_back(Unit::create(Unit::Type::Settler, 0, 20));
-	units.push_back(Unit::create(Unit::Type::Warrior, 1, 21));
+	auto units = std::make_shared<std::list<Unit::Ptr>>();
+	units->push_back(Unit::create(Unit::Type::Settler, 0, 50));
+	units->push_back(Unit::create(Unit::Type::Warrior, 1, 0));
+	units->push_back(Unit::create(Unit::Type::Settler, 0, 210));
+	units->push_back(Unit::create(Unit::Type::Warrior, 1, 21));
 
 	/*** create town ***/ // for test XXX
 
@@ -57,13 +57,33 @@ int main ()
 	cities.push_back(City("t1", 0, 2));
 	cities.push_back(City("t2", 1, 3));
 
+	/*** create player infos ***/
+
+	std::vector<PlayerInfo::Ptr> playerInfos;
+	playerInfos.push_back(std::make_shared<PlayerInfo>());
+	playerInfos.push_back(std::make_shared<PlayerInfo>());
+
+	auto visible = hex::createRange(50, 2,
+		world->height, world->width, world->isCylinder);
+/*
+	std::set<PosHex> visibleHexes;
+	visibleHexes.insert(10);
+	visibleHexes.insert(11);
+	visibleHexes.insert(12); */
+
+//	playerInfos[0].setVisibleTerrains(*(visible));
+
+//	playerInfos[0].set
+
 	/*** set infomation ***/
 
 	auto worldInfo = std::make_shared<WorldInfo>();
 	worldInfo->setWorld(world);
 	worldInfo->setUnits(units);
 	worldInfo->setCities(cities);
-
+	worldInfo->setPlayerInfos(playerInfos);
+	// TODO
+	worldInfo->updateVisibleTerrains(0);
 
 	/***/
 
@@ -89,7 +109,7 @@ int main ()
 
 	for (;;) {
 		auto cursolPos = windowWorld->getCursolPos();
-		auto itee = std::find_if(units.begin(), units.end(), 
+		auto itee = std::find_if(units->begin(), units->end(), 
 				[cursolPos](Unit::Ptr& u){ return u->getPos() == cursolPos; });
 
 		/*** clear windows ***/
@@ -100,7 +120,7 @@ int main ()
 
 		/*** writing windows ***/
 
-		if (itee != units.end()) {
+		if (itee != units->end()) {
 			windowInfo->moveAddStr(console::Vec2(0, 0), "hoge");
 			windowInfo->refresh();
 		}
@@ -146,10 +166,10 @@ int main ()
 			break;
 		case 'g': 
 			{
-				auto iteUnit = std::find_if(units.begin(), units.end(), 
+				auto iteUnit = std::find_if(units->begin(), units->end(), 
 						[cursolPos](Unit::Ptr& u) { return u->getPos() == cursolPos; });
 
-				if (iteUnit != units.end()) {
+				if (iteUnit != units->end()) {
 					(*iteUnit)->setPos(5);
 				}
 

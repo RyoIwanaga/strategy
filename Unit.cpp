@@ -2,7 +2,7 @@
 
 NS_STRATEGY;
 
-Unit::Unit(Unit::Type t, Owner owner, ulong pos, int hp, int damage, ushort move) :
+Unit::Unit(Unit::Type t, Owner owner, ulong pos, int hp, int damage, ushort move, ushort sight) :
 	type(t),
 	owner(owner),
 	pos(pos),
@@ -10,7 +10,8 @@ Unit::Unit(Unit::Type t, Owner owner, ulong pos, int hp, int damage, ushort move
 	hpMax(hp),
 	damage(damage),
 	move(move),
-	moveMax(move)
+	moveMax(move),
+	sight(sight)
 {
 }
 
@@ -22,9 +23,9 @@ Unit::Ptr Unit::create(Type t, Owner owner, ulong p)
 {
 	switch (t) {
 	case Unit::Type::Settler:
-		return std::make_shared<Unit>(Unit::Type::Settler, owner, p, 100, 20, 4);
+		return std::make_shared<Unit>(Unit::Type::Settler, owner, p, 100, 20, 4, 2);
 	case Unit::Type::Warrior:
-		return std::make_shared<Unit>(Unit::Type::Warrior, owner, p, 100, 20, 2);
+		return std::make_shared<Unit>(Unit::Type::Warrior, owner, p, 100, 20, 2, 2);
 
 	default:
 		assert(false);

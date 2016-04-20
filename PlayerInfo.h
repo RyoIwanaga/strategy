@@ -1,14 +1,17 @@
 #ifndef _strategy__PlayerInfo_h_
 #define _strategy__PlayerInfo_h_
 
-#include "Strategy.h"
+#include "strategy.h"
 
 NS_STRATEGY;
 
 class PlayerInfo
 {
-	// tech
-	// sikai
+	REU__TYPEDEF_SPTR(PlayerInfo);
+
+	REU__PROPERTY(std::set<PosHex>, visibleTerrains, VisibleTerrains);
+	// TODO tech
+	// TODO Score
 };
 
 NS_STRATEGY_END;
