@@ -52,12 +52,12 @@ public:
 	strategy::PosHex getCursolPos();
 	/***/
 
-	void moveLeft();
-	void moveRight();
-	void moveLeftUp();
-	void moveRightUp();
-	void moveRightDown();
-	void moveLeftDown();
+	bool moveLeft();
+	bool moveRight();
+	bool moveLeftUp();
+	bool moveRightUp();
+	bool moveRightDown();
+	bool moveLeftDown();
 	void display(const strategy::WorldInfo& worldInfo);
 
 protected: 
@@ -120,46 +120,87 @@ int WindowWorld::getHexGridWidth()
 	return (this->getSize().getX() - HEX_SPACE) / (HEX_WIDTH + HEX_SPACE);
 }
 
-void WindowWorld::moveLeft() 
+bool WindowWorld::moveLeft() 
 {
 	setCursolX(Util::Math::addCircle(getCursolX(), -1, worldWidth - 1));
+
+	return true;
+	/*
+	if (getIsWorldCylinder()) {
+		setCursolX(Util::Math::addCircle(getCursolX(), -1, worldWidth - 1));
+
+		return true;
+	}
+	else {
+		if (getCursolX == 0) {
+			return false;	
+		}
+		else {
+			setCursolX(getCursolX() - 1);
+
+			return true;
+		}
+	}
+	*/
 }
 
-void WindowWorld::moveRight() 
+bool WindowWorld::moveRight() 
 { 
 	setCursolX(Util::Math::addCircle(getCursolX(), 1, worldWidth - 1));
+
+	return true;
 }
 
-void WindowWorld::moveLeftUp()
+bool WindowWorld::moveLeftUp()
 {
-	setCursolY(Util::Math::addCircle(getCursolY(), -1, worldHeight - 1));
+	if (getCursolY() == 0)
+		return false;
+
+	setCursolY(Util::Math::addRange<int>(getCursolY(), -1, worldHeight - 1));
 
 	if (getCursolY() % 2 == 1)
 		setCursolX(Util::Math::addCircle(getCursolX(), -1, worldWidth - 1));
+
+	return true;
 }
 
-void WindowWorld::moveRightUp()
+bool WindowWorld::moveRightUp()
 {
-	setCursolY(Util::Math::addCircle(getCursolY(), -1, worldHeight - 1));
+	if (getCursolY() == 0)
+		return false;
+
+	setCursolY(Util::Math::addRange<int>(getCursolY(), -1, worldHeight - 1));
 
 	if (getCursolY() % 2 == 0)
 		setCursolX(Util::Math::addCircle(getCursolX(), 1, worldWidth - 1));
+
+	return true;
 }
 
-void WindowWorld::moveRightDown()
+bool WindowWorld::moveRightDown()
 {
+	if (getCursolY() == worldHeight - 1)
+		return false;
+
 	setCursolY(Util::Math::addCircle(getCursolY(), 1, worldHeight - 1));
 
 	if (getCursolY() % 2 == 0)
 		setCursolX(Util::Math::addCircle(getCursolX(), 1, worldWidth - 1));
+
+	return true;
 }
 
-void WindowWorld::moveLeftDown()
+bool WindowWorld::moveLeftDown()
 {
+	if (getCursolY() == worldHeight - 1)
+		return false;
+
 	setCursolY(Util::Math::addCircle(getCursolY(), 1, worldHeight - 1));
 
 	if (getCursolY() % 2 == 1)
 		setCursolX(Util::Math::addCircle(getCursolX(), -1, worldWidth - 1));
+
+	return true;
 }
 
 void WindowWorld::display(const strategy::WorldInfo& worldInfo)

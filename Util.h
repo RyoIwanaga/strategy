@@ -7,19 +7,35 @@ namespace Util {
 
 	namespace Math {
 
-		inline int addCircle(int base, int add, int max, int min = 0) 
-		{
-			assert(max >= min);
+		template<typename T>
+			inline T addCircle(T base, T add, T max, T min = 0) 
+			{
+				assert(max >= min);
 
-			int range = max - min + 1;
-			int moveFromMin = (base - min + add) % range;
+				auto range = max - min + 1;
+				auto moveFromMin = (base - min + add) % range;
 
-			if (moveFromMin >= 0)
-				return min + moveFromMin;
-			else
-				return max + moveFromMin + 1;
+				if (moveFromMin >= 0)
+					return min + moveFromMin;
+				else
+					return max + moveFromMin + 1;
 
-		}
+			}
+
+		template<typename T>
+			inline T addRange(T base, T add, T max, T min = 0)
+			{
+				assert(max >= min);
+
+				auto result = base + add;
+
+				if (result < min)
+					return min;
+				else if (max < result)
+					return max;
+				else
+					return result;
+			}
 
 		template<typename T>
 			inline T addToMax(T base, T value, T max)
