@@ -17,7 +17,7 @@ protected:
 	REU__TYPEDEF_SPTR(WindowWorld);
 
 	// cursol position
-	REU__PROPERTY(console::Vec2, cursol, Cursol);
+	REU__PROPERTY(ulong, cursol, Cursol);
 	REU__PROPERTY(int, worldHeight, WorldHeight);
 	REU__PROPERTY(int, worldWidth, WorldWidth);
 	REU__PROPERTY(bool, isWorldCylinder, IsWorldCylinder);
@@ -37,33 +37,43 @@ public:
 
 	/*** Accessors ***/
 
-	int getCursolX() { return this->getCursol().getX(); }
-	int getCursolY() { return this->getCursol().getY(); }
-
-	void setCursolX(int x) 
-	{ 
-		this->cursol = console::Vec2(x, this->getCursolY());
-	}
-
-	void setCursolY(int y) 
-	{ 
-		this->cursol = console::Vec2(this->getCursolX(), y);
-	}
-
+	uint getCursolX() { return hex::toV2(getCursol(), getWorldHeight(), getWorldWidth()).getX(); }
+	uint getCursolY() { return hex::toV2(getCursol(), getWorldHeight(), getWorldWidth()).getY(); }
+	bool getIsConnectH() { return getIsWorldCylinder(); } // TODO
+	bool getIsConnectV() { return false; } //TODO
 	strategy::PosHex getCursolPos();
 	/***/
 
-	bool moveLeft();
-	bool moveRight();
-	bool moveLeftUp();
-	bool moveRightUp();
-	bool moveRightDown();
-	bool moveLeftDown();
+
+	bool cursolMoveLeft() 		{ return _cursolMove(hex::Direction::Left); }
+	bool cursolMoveRight() 		{ return _cursolMove(hex::Direction::Right); }
+	bool cursolMoveUpLeft() 	{ return _cursolMove(hex::Direction::UpLeft); }
+	bool cursolMoveUpRight() 	{ return _cursolMove(hex::Direction::UpRight); }
+	bool cursolMoveDownLeft() 	{ return _cursolMove(hex::Direction::DownLeft); }
+	bool cursolMoveDownRight() 	{ return _cursolMove(hex::Direction::DownRight); }
+
 	void display(const strategy::WorldInfo& worldInfo);
 
 protected: 
 	int getHexGridHeight();
 	int getHexGridWidth();
+
+private:
+	bool _cursolMove(hex::Direction dir)
+	{
+		auto result = hex::move(getCursol(), dir, 
+				getWorldHeight(), getWorldWidth(), 
+				getIsConnectH(), getIsConnectV());
+
+		if (result == hex::FnMoveFail) {
+			return false;
+		}
+		else {
+			setCursol(result);
+
+			return true;
+		}
+	}
 };
 
 char makeChUnit(strategy::Unit::Ptr unit);
@@ -87,7 +97,8 @@ WindowWorld::WindowWorld(
 			sizeVisibleHex.getY() * HEX_HEIGHT),
 
 			pos, true),
-	cursol(console::Vec2(worldWidth / 2, worldHeight / 2)),
+	cursol(hex::fromV2(hex::HexVec2(worldWidth / 2, worldHeight / 2),
+			worldHeight, worldWidth)),
 	worldHeight(worldHeight),
 	worldWidth(worldWidth),
 	isWorldCylinder(isCylinder)
@@ -120,89 +131,6 @@ int WindowWorld::getHexGridWidth()
 	return (this->getSize().getX() - HEX_SPACE) / (HEX_WIDTH + HEX_SPACE);
 }
 
-bool WindowWorld::moveLeft() 
-{
-	setCursolX(Util::Math::addCircle(getCursolX(), -1, worldWidth - 1));
-
-	return true;
-	/*
-	if (getIsWorldCylinder()) {
-		setCursolX(Util::Math::addCircle(getCursolX(), -1, worldWidth - 1));
-
-		return true;
-	}
-	else {
-		if (getCursolX == 0) {
-			return false;	
-		}
-		else {
-			setCursolX(getCursolX() - 1);
-
-			return true;
-		}
-	}
-	*/
-}
-
-bool WindowWorld::moveRight() 
-{ 
-	setCursolX(Util::Math::addCircle(getCursolX(), 1, worldWidth - 1));
-
-	return true;
-}
-
-bool WindowWorld::moveLeftUp()
-{
-	if (getCursolY() == 0)
-		return false;
-
-	setCursolY(Util::Math::addRange<int>(getCursolY(), -1, worldHeight - 1));
-
-	if (getCursolY() % 2 == 1)
-		setCursolX(Util::Math::addCircle(getCursolX(), -1, worldWidth - 1));
-
-	return true;
-}
-
-bool WindowWorld::moveRightUp()
-{
-	if (getCursolY() == 0)
-		return false;
-
-	setCursolY(Util::Math::addRange<int>(getCursolY(), -1, worldHeight - 1));
-
-	if (getCursolY() % 2 == 0)
-		setCursolX(Util::Math::addCircle(getCursolX(), 1, worldWidth - 1));
-
-	return true;
-}
-
-bool WindowWorld::moveRightDown()
-{
-	if (getCursolY() == worldHeight - 1)
-		return false;
-
-	setCursolY(Util::Math::addCircle(getCursolY(), 1, worldHeight - 1));
-
-	if (getCursolY() % 2 == 0)
-		setCursolX(Util::Math::addCircle(getCursolX(), 1, worldWidth - 1));
-
-	return true;
-}
-
-bool WindowWorld::moveLeftDown()
-{
-	if (getCursolY() == worldHeight - 1)
-		return false;
-
-	setCursolY(Util::Math::addCircle(getCursolY(), 1, worldHeight - 1));
-
-	if (getCursolY() % 2 == 1)
-		setCursolX(Util::Math::addCircle(getCursolX(), -1, worldWidth - 1));
-
-	return true;
-}
-
 void WindowWorld::display(const strategy::WorldInfo& worldInfo)
 {
 	/* oo  oo
@@ -225,7 +153,7 @@ void WindowWorld::display(const strategy::WorldInfo& worldInfo)
 	for (int row = 0; row < this->getSize().getY(); row++) {
 
 		int relativeY = row / HEX_HEIGHT - cursolHexPos.getY() + 1;
-//		int worldY = Util::Math::addCircle(getCursolY(), relativeY, worldInfo.getWorld()->getHeight() - 1);
+//		int worldY = util::math::addCircle(getCursolY(), relativeY, worldInfo.getWorld()->getHeight() - 1);
 		int worldY = getCursolY() + relativeY;
 		if (worldY < 0 || worldInfo.getWorld()->getHeight() - 1 < worldY)
 			continue;
@@ -258,7 +186,24 @@ void WindowWorld::display(const strategy::WorldInfo& worldInfo)
 
 			int xxx = isCursolEvenRow ? xx : isThisEven ? xx : xx + 1;
 			int relativeX = xxx - cursolHexPos.getX();
-			int worldX = Util::Math::addCircle(getCursolX(), relativeX, worldInfo.getWorld()->getWidth() - 1);
+			int worldX;
+
+			if (getIsWorldCylinder()) {
+				worldX = util::math::addCircle<int>(getCursolX(), relativeX, worldInfo.getWorld()->getWidth() - 1);
+			}
+			else {
+				worldX = getCursolX() + relativeX;
+
+				if (worldX < 0 || worldInfo.getWorld()->getWidth() - 1 < worldX) {
+					this->addCh(WindowWorld::HEX_TERRAIN_PIT);
+					this->addCh(WindowWorld::HEX_TERRAIN_PIT);
+					this->addCh(Window::CH_BLANK);
+					this->addCh(Window::CH_BLANK);
+
+					continue;
+				}
+			}
+
 			ulong index = worldY * worldInfo.getWorld()->getWidth() + worldX;
 			auto terrain = worldInfo.getWorld()->terrains[worldY * worldInfo.getWorld()->getWidth() + worldX];
 
@@ -301,7 +246,7 @@ void WindowWorld::display(const strategy::WorldInfo& worldInfo)
 					/* 2 */
 
 					if (isVisibleTerrain) 
-						this->addCh(makeChTerrain(terrain) | makeColorTerrain(terrain));
+						this->addCh(makeChTerrain(terrain) | makeColorTerrain(terrain) | A_BOLD);
 					else
 						this->addCh(makeChTerrain(terrain) | makeColorTerrainOutOfSight());
 

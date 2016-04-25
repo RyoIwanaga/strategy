@@ -61,6 +61,13 @@ namespace diagram {
 		public:
 			Vec2(T x, T y);
 			virtual ~Vec2() {}
+
+			bool operator ==(const Vec2<T>& rhs)
+			{
+				return this->getX() == rhs.getX() && this->getY() == rhs.getY();
+			}
+
+			bool operator !=(const Vec2<T>& rhs) { return !(this == rhs); }
 		};
 
 	template <typename T>

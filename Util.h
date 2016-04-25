@@ -3,9 +3,9 @@
 
 #include <cassert>
 
-namespace Util {
+namespace util {
 
-	namespace Math {
+	namespace math {
 
 		template<typename T>
 			inline T addCircle(T base, T add, T max, T min = 0) 

@@ -20,16 +20,14 @@
 // 3 sukumi
 //
 //// TODO
-// property macros
 // help popup
 // unit idou
 // unit / town info
 // boosts
 // window layer
-// worldinf units の渡し方
-// 上下の移動時に循環しないように
-// format string
 // automake ソース整理
+// format string
+// no cylinder world
 
 int main () 
 {
@@ -85,7 +83,8 @@ int main ()
 	// TODO
 	worldInfo->updateVisibleTerrains(0);
 
-	/***/
+
+	/***** create console windows *****/
 
 	console::initialize();
 
@@ -141,28 +140,28 @@ int main ()
 	
 		switch (ch) {
 		case 'y':
-			windowWorld->moveLeftUp();
+			windowWorld->cursolMoveUpLeft();
 			break;
 		case 'u':
-			windowWorld->moveRightUp();
+			windowWorld->cursolMoveUpRight();
 			break;
 		case 'b':
-			windowWorld->moveLeftDown();
+			windowWorld->cursolMoveDownLeft();
 			break;
 		case 'n':
-			windowWorld->moveRightDown();
+			windowWorld->cursolMoveDownRight();
 			break;
 		case 'k':
-			windowWorld->moveLeftUp();
+			windowWorld->cursolMoveUpLeft();
 			break;
 		case 'j':
-			windowWorld->moveRightDown();
+			windowWorld->cursolMoveDownRight();
 			break;
 		case 'h':
-			windowWorld->moveLeft();
+			windowWorld->cursolMoveLeft();
 			break;
 		case 'l':
-			windowWorld->moveRight();
+			windowWorld->cursolMoveRight();
 			break;
 		case 'g': 
 			{

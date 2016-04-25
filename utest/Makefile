@@ -19,7 +19,7 @@ OBJS=
 
 .PHONY: all
 all:
-	${CXX} ${CPP11} ${CFLAGS} ${CURSES} ${LCPPUNIT} main.cpp 
+	${CXX} ${CPP11} ${CFLAGS} ${CURSES}  main.cpp ${LCPPUNIT}
 	./a.out
 
 .PHONY: debug

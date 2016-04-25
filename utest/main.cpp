@@ -8,16 +8,18 @@
 
 // targets
 #include "../Util.h"
-#include "../Hex.h"
+#include "../hex.h"
 
 #include <stdio.h>
 #include <set>
 
+NS_USING_STRATEGY;
+
 /*** Template
  
-class UtilTest : public CPPUNIT_NS::TestFixture
+class utilTest : public CPPUNIT_NS::TestFixture
 {
-	CPPUNIT_TEST_SUITE(UtilTest);
+	CPPUNIT_TEST_SUITE(utilTest);
 	CPPUNIT_TEST(addCircle);
 	CPPUNIT_TEST_SUITE_END();
 
@@ -32,37 +34,37 @@ public:
 	}
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(UtilTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(utilTest);
   */
-
-class UtilTest : public CPPUNIT_NS::TestFixture
+#ifdef a
+class utilTest : public CPPUNIT_NS::TestFixture
 {
-	CPPUNIT_TEST_SUITE(UtilTest);
-	CPPUNIT_TEST(addCircle);
+	CPPUNIT_TEST_SUITE(utilTest);
+//	CPPUNIT_TEST(addCircle);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
 	void addCircle()
 	{
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(0, 1, 5), 1);
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(0, 6, 5), 0);
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(3, 5, 5), 2);
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(3, 12, 5), 3);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(0, 1, 5), 1);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(0, 6, 5), 0);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(3, 5, 5), 2);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(3, 12, 5), 3);
 		
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(0, 1, 4, -1), 1);
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(0, 5, 4, -1), -1);
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(0, 12, 4, -1), 0);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(0, 1, 4, -1), 1);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(0, 5, 4, -1), -1);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(0, 12, 4, -1), 0);
 
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(3, -1, 5), 2);
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(3, -6, 5), 3);
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(3, -12, 5), 3);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(3, -1, 5), 2);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(3, -6, 5), 3);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(3, -12, 5), 3);
 
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(0, -1, 3, -1), -1);
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(0, -5, 3, -1), 0);
-		CPPUNIT_ASSERT_EQUAL(Util::addCircle(0, -10, 3, -1), 0);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(0, -1, 3, -1), -1);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(0, -5, 3, -1), 0);
+		CPPUNIT_ASSERT_EQUAL(util::math::addCircle(0, -10, 3, -1), 0);
 
-		//CPPUNIT_ASSERT_EQUAL(Util::addCircle(3, -2, 5), 1);
-		//CPPUNIT_ASSERT_EQUAL(Util::addCircle(3, -5, 5), 4);
+		//CPPUNIT_ASSERT_EQUAL(util::addCircle(3, -2, 5), 1);
+		//CPPUNIT_ASSERT_EQUAL(util::addCircle(3, -5, 5), 4);
 	}
 
 public:
@@ -74,55 +76,75 @@ public:
 	}
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(UtilTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(utilTest);
+#endif
 
-class HexTest : public CPPUNIT_NS::TestFixture
+class TestHex : public CPPUNIT_NS::TestFixture
 {
-	CPPUNIT_TEST_SUITE(HexTest);
-	CPPUNIT_TEST(neighbor);
+	CPPUNIT_TEST_SUITE(TestHex);
+	CPPUNIT_TEST(testToV2);
+	CPPUNIT_TEST(testFromV2);
 	CPPUNIT_TEST_SUITE_END();
 
+	static const uint HEIGHT = 8;
+	static const uint WIDTH = 10;
+
 protected:
-	void neighbor()
+	void testToV2()
 	{
-		/*  width = 3
-		 *
-		 *     0 1 2
-		 *	 +-------
-		 * 0 | 0 1 2
-		 * 1 |  3 4 5
-		 * 2 | 6 7 8
-		 * 3 |  9 a b 
-		 */
-		const int height = 4;
-		const int width = 3;
-
-		std::set<int> result;
-		std::set<int> a;
-
-
-		auto l = Hex::neighbors(0, height, width, false);
-
-		result = listToSet(Hex::neighbors(0, height, width, false));
-		a = std::set<int>{ 1, 3 };		
-		CPPUNIT_ASSERT(result == a);
-
-		for (auto item : result)
-			printf("%d ", item);
-		printf("\n");
-
-		//std::cout << result << std::endl;
+		CPPUNIT_ASSERT(hex::HexVec2(3, 0) == hex::HexVec2(3, 0));
+		CPPUNIT_ASSERT(hex::HexVec2(0, 0) == hex::toV2(0, HEIGHT, WIDTH));
+		CPPUNIT_ASSERT(hex::HexVec2(3, 0) == hex::toV2(3, HEIGHT, WIDTH));
+		CPPUNIT_ASSERT(hex::HexVec2(3, 1) == hex::toV2(13, HEIGHT, WIDTH));
 	}
 
-	std::set<int> listToSet(const std::list<int>& lst)
+	void testFromV2()
 	{
-		std::set<int> s;
-
-		for (auto item : lst)
-			s.insert(item);
-
-		return s;
+		CPPUNIT_ASSERT(0 == hex::fromV2(hex::HexVec2(0, 0), HEIGHT, WIDTH));
+		CPPUNIT_ASSERT(3 == hex::fromV2(hex::HexVec2(3, 0), HEIGHT, WIDTH));
+		CPPUNIT_ASSERT(13 == hex::fromV2(hex::HexVec2(3, 1), HEIGHT, WIDTH));
 	}
+
+//	void neighbor()
+//	{
+//		/*  width = 3
+//		 *
+//		 *     0 1 2
+//		 *	 +-------
+//		 * 0 | 0 1 2
+//		 * 1 |  3 4 5
+//		 * 2 | 6 7 8
+//		 * 3 |  9 a b 
+//		 */
+//		const int height = 4;
+//		const int width = 3;
+//
+//		std::set<int> result;
+//		std::set<int> a;
+//
+//
+//		auto l = hex::neighbors(0, height, width, false);
+//
+//		result = listToSet(hex::neighbors(0, height, width, false));
+//		a = std::set<int>{ 1, 3 };		
+//		CPPUNIT_ASSERT(result == a);
+//
+//		for (auto item : result)
+//			printf("%d ", item);
+//		printf("\n");
+//
+//		//std::cout << result << std::endl;
+//	}
+//
+//	std::set<int> listToSet(const std::list<int>& lst)
+//	{
+//		std::set<int> s;
+//
+//		for (auto item : lst)
+//			s.insert(item);
+//
+//		return s;
+//	} */
 
 public:
 	void setUp()
@@ -135,7 +157,8 @@ public:
 	}
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(HexTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(TestHex);
+
 
 
 int main(int argc, char const *argv[]){
