@@ -9,9 +9,12 @@ NS_USING_STRATEGY;
 class WindowWorld : public Window
 {
 protected:
-	static const int HEX_HEIGHT = 2;
-	static const int HEX_WIDTH = 2;
-	static const int HEX_SPACE = 2;
+	static const int 	HEX_HEIGHT = 2;
+	static const int 	HEX_WIDTH = 2;
+	static const int 	HEX_SPACE = 2;
+	static const char	HEX_TERRAIN_PIT = ' ';
+
+	REU__TYPEDEF_SPTR(WindowWorld);
 
 	// cursol position
 	REU__PROPERTY(console::Vec2, cursol, Cursol);
@@ -20,8 +23,6 @@ protected:
 	REU__PROPERTY(bool, isWorldCylinder, IsWorldCylinder);
 
 public:
-	typedef std::shared_ptr<WindowWorld> Ptr;
-
 	WindowWorld(
 			const console::Vec2& sizeVisibleHex, 
 			const console::Vec2& pos, 
@@ -68,7 +69,6 @@ protected:
 char makeChUnit(strategy::Unit::Ptr unit);
 char makeColorUnit(strategy::Unit::Ptr unit);
 char makeChTerrain(const Terrain& terrain);
-
 
 
 WindowWorld::WindowWorld(
@@ -225,7 +225,11 @@ void WindowWorld::display(const strategy::WorldInfo& worldInfo)
 	for (int row = 0; row < this->getSize().getY(); row++) {
 
 		int relativeY = row / HEX_HEIGHT - cursolHexPos.getY() + 1;
-		int worldY = Util::Math::addCircle(getCursolY(), relativeY, worldInfo.getWorld()->getHeight() - 1);
+//		int worldY = Util::Math::addCircle(getCursolY(), relativeY, worldInfo.getWorld()->getHeight() - 1);
+		int worldY = getCursolY() + relativeY;
+		if (worldY < 0 || worldInfo.getWorld()->getHeight() - 1 < worldY)
+			continue;
+
 		bool isEvenWorldY = worldY % 2 == 0;
 		bool isThisEven = isCursolEvenRow ? isEvenWorldY : ! isEvenWorldY;
 
