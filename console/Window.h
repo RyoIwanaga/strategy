@@ -41,7 +41,6 @@ public:
 
 	console::Vec2 getWindowSize();
 
-	// TODO no box ver
 	int refresh();
 	int clear();
 	int move(const console::Vec2& pos);

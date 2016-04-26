@@ -237,10 +237,11 @@ namespace hex {
 
 			for (auto neighbor : neighbors) {
 				// XXX Destructive operation
-				auto isInserted = acc->insert(neighbor);
+				auto resultInsert = acc->insert(neighbor);
 
-				// TODO
-				//if (isInserted) continue;
+				// skip
+				if (! resultInsert.second) 
+					continue;
 
 				auto resultCollect = hex::collectRange(acc, neighbor, (ushort)(range - 1), height, width, isCyinder);
 

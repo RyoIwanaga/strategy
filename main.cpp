@@ -19,15 +19,16 @@
 // umi vs riku???
 // 3 sukumi
 //
-//// TODO
-// help popup
-// unit idou
-// unit / town info
-// boosts
-// window layer
-// automake ソース整理
-// format string
-// no cylinder world
+
+/*** todo ***
+ *
+ * help popup
+ * move unit
+ * unit / town info / unit command
+ * window layer
+ * boost
+ * automake
+ */
 
 int main () 
 {
@@ -61,18 +62,6 @@ int main ()
 	playerInfos.push_back(std::make_shared<PlayerInfo>());
 	playerInfos.push_back(std::make_shared<PlayerInfo>());
 
-	auto visible = hex::createRange(50, 2,
-		world->height, world->width, world->isCylinder);
-/*
-	std::set<PosHex> visibleHexes;
-	visibleHexes.insert(10);
-	visibleHexes.insert(11);
-	visibleHexes.insert(12); */
-
-//	playerInfos[0].setVisibleTerrains(*(visible));
-
-//	playerInfos[0].set
-
 	/*** set infomation ***/
 
 	auto worldInfo = std::make_shared<WorldInfo>();
@@ -80,7 +69,6 @@ int main ()
 	worldInfo->setUnits(units);
 	worldInfo->setCities(cities);
 	worldInfo->setPlayerInfos(playerInfos);
-	// TODO
 	worldInfo->updateVisibleTerrains(0);
 
 
@@ -201,3 +189,8 @@ int main ()
 	return 0;	
 }
 
+
+/*
+ * normal 
+ * move unit
+ */

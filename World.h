@@ -2,7 +2,7 @@
 #define _strategy__World_h_
 
 #include "strategy.h"
-#include "hex.h" // TODO remove later
+#include "hex.h"
 #include "Terrain.h"
 
 NS_STRATEGY;
